@@ -33,6 +33,13 @@ Add `-DryRun` to the second form to preview the plan without changing anything.
 - Read exit codes: `0` success including a dry run even when no installs are found, `1` install failure such as the engine or download failing, `2` usage or detection error such as conflicting flags, an unknown branch, or no Discord installs found.
 - Use network access to GitHub for the script and the engine download; you need no admin rights.
 
+## Status
+
+Experimental and still moving. It works today, but it is not a finished
+product: interfaces may change, features may be improved or removed, and a
+release can break the one before it. This is maintained by one person, not a
+team. If it breaks, open an issue with the command you ran and what you saw.
+
 ## Links
 
 - Upstream project `Vencord/Installer`: https://github.com/Vencord/Installer — this is a reduced fork of `Vencord/Installer`; the installer logic is upstream's work; you drive the upstream released engine with its own flags and patching is not reimplemented here.
