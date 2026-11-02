@@ -2,7 +2,7 @@
 
 Install and repair Vencord from the official upstream release with one PowerShell line.
 
-Unofficial, personal-use driver. All credit to [Vencord](https://github.com/Vendicated/Vencord) by Vendicated and contributors, and the [Vencord Installer](https://github.com/Vencord/Installer) engine it downloads at run time.
+Unofficial, personal-use driver. All credit to Vencord by Vendicated and contributors, and the Vencord Installer engine it downloads at run time.
 
 ## Install
 
