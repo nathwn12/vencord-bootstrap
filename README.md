@@ -1,7 +1,8 @@
-<h1 align="center">Installer2</h1>
-<p align="center"><strong>Install or repair Vencord on your Discord installs with one line.</strong></p>
+# vencord-bootstrap
 
-Unofficial, personal-use driver. All credit to the original authors: [Vencord](https://github.com/Vendicated/Vencord) by Vendicated and contributors, and the [Vencord Installer](https://github.com/Vencord/Installer) engine it downloads at run time.
+Installs and repairs Vencord from the official upstream release with one PowerShell line.
+
+Unofficial, personal-use driver. All credit to [Vencord](https://github.com/Vendicated/Vencord) by Vendicated and contributors, and the [Vencord Installer](https://github.com/Vencord/Installer) engine it downloads at run time.
 
 ## Install
 
@@ -9,7 +10,7 @@ Unofficial, personal-use driver. All credit to the original authors: [Vencord](h
 iex (irm 'https://raw.githubusercontent.com/nathwn12/vencord-bootstrap/main/vencord-setup.ps1')
 ```
 
-You need Discord already installed on Windows with PowerShell 5.1 or newer. The first run detects your installs, downloads the official engine once, installs or repairs Vencord, then launches Discord.
+Requires Windows with PowerShell 5.1 or newer and Discord already installed. The first run detects your installs, downloads the official engine once, installs or repairs Vencord, then launches Discord.
 
 To include OpenAsar on each install:
 
@@ -17,59 +18,29 @@ To include OpenAsar on each install:
 & ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/nathwn12/vencord-bootstrap/main/vencord-setup.ps1'))) -IncludeOpenAsar
 ```
 
-To preview the plan without changing anything, add `-DryRun` to the second form.
+Add `-DryRun` to the second form to preview the plan without changing anything.
 
-## Use it
+## What it does
 
-Run the second Install form with the flags you want. Add `-IncludeOpenAsar` to also install OpenAsar, `-Branch` to target one branch only (stable, ptb, canary, development, or dev as an alias for development), `-Location` to target one install folder only, or `-NoLaunch` to skip the automatic launch after success. Add `-DryRun` any time to print the plan without downloading or changing anything.
+- Detects Discord installs across stable, PTB, Canary, and Development.
+- Installs Vencord on a fresh install, repairs an already patched install.
+- Closes Discord automatically before patching so a file lock never blocks the run.
+- Downloads the officially released executable at run time, so the engine is always current.
+- Leaves OpenAsar off unless `-IncludeOpenAsar` is passed; `-ExcludeOpenAsar` restates the default and cannot be combined with `-IncludeOpenAsar`.
+- Targets one branch with `-Branch` (stable, ptb, canary, development, or dev as an alias for development) or one folder with `-Location`; the two cannot be combined; default is all detected installs.
+- Skips the automatic launch after success with `-NoLaunch`.
+- Safe to re-run any time to repair or refresh; each install is verified on disk after the engine runs.
+- Exit codes: `0` success including a dry run even when no installs are found, `1` install failure such as the engine or download failing, `2` usage or detection error such as conflicting flags, an unknown branch, or no Discord installs found.
+- Needs network access to GitHub for the script and the engine download; no admin rights needed.
 
-## What you get
+## Notes
 
-- Automatic detection of your Discord installs across stable, PTB, Canary, and Development.
-- Install-or-repair behavior: a fresh install gets Vencord, an already patched install gets repaired.
-- Automatic Discord close before patching, so a file lock never blocks the run.
-- Always current engine: every run pulls the officially released executable at run time.
-- OpenAsar as an opt-in on each install, off unless you ask for it.
-- Safe re-runs: run it again any time to repair or refresh.
-- Automatic launch of each install you just set up after a successful run.
-
-## Commands
-
-Run the second Install form with the flags you want. Each flag below shows its default.
-
-- `-DryRun` — print the plan without downloading or changing anything. Default off.
-- `-IncludeOpenAsar` — also install OpenAsar on each install. Default off.
-- `-ExcludeOpenAsar` — leave OpenAsar out. This is the default behavior, so the switch is a no-op kept for compatibility. You cannot combine it with `-IncludeOpenAsar`.
-- `-Branch` — target one branch only: stable, ptb, canary, development, or dev as an alias for development. Default is all detected installs. You cannot combine it with `-Location`.
-- `-Location` — target one install folder only. Default is all detected installs.
-- `-NoLaunch` — skip the automatic launch after a successful run. Default is to launch each install you just set up.
-
-Exit codes:
-
-- `0` — success, including a dry run even when no installs are found.
-- `1` — install failure, such as the engine failing or the download failing.
-- `2` — usage or detection error, such as conflicting flags, an unknown branch, or no Discord installs found.
-
-## Requirements
-
-- Windows.
-- PowerShell 5.1 or newer, including current PowerShell.
-- Discord already installed.
-- Network access to GitHub for the script and the engine download.
-- No admin rights needed.
-
-## Links
-
+- Derived from `Vencord/Installer`; patching is not reimplemented here, this script drives the upstream released engine with its own flags.
 - Upstream Vencord: https://github.com/Vendicated/Vencord
 - Upstream Installer: https://github.com/Vencord/Installer
 - Upstream releases, the engine this script downloads at run time: https://github.com/Vencord/Installer/releases
 - This repo: https://github.com/nathwn12/vencord-bootstrap
-- License: GPLv3, see [LICENSE](LICENSE)
 
-<!-- nathwn12 house footer: identical in every repo. Do not edit. -->
-<p align="center">
-  <a href="https://github.com/nathwn12"><img src="assets/signature.svg" width="96" alt="nathwn12" /></a>
-</p>
-<p align="center">
-  <sub>Built by <a href="https://github.com/nathwn12">nathwn12</a> · <a href="https://github.com/nathwn12?tab=repositories">All projects</a></sub>
-</p>
+## License
+
+GPLv3, see [LICENSE](LICENSE).
