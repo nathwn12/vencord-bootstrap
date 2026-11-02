@@ -1,4 +1,4 @@
-# Installer2 — script-only Vencord setup (personal use)
+# vencord-bootstrap — script-only Vencord setup (personal use)
 
 This repo is ONE product: `vencord-setup.ps1`. It auto-detects Discord
 installs and drives upstream's official released engine

@@ -6,7 +6,7 @@ Unofficial, personal-use driver. All credit to the original authors: [Vencord](h
 ## Install
 
 ```powershell
-iex (irm 'https://raw.githubusercontent.com/nathwn12/Installer2/main/vencord-setup.ps1')
+iex (irm 'https://raw.githubusercontent.com/nathwn12/vencord-bootstrap/main/vencord-setup.ps1')
 ```
 
 You need Discord already installed on Windows with PowerShell 5.1 or newer. The first run detects your installs, downloads the official engine once, installs or repairs Vencord, then launches Discord.
@@ -14,7 +14,7 @@ You need Discord already installed on Windows with PowerShell 5.1 or newer. The 
 To include OpenAsar on each install:
 
 ```powershell
-& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/nathwn12/Installer2/main/vencord-setup.ps1'))) -IncludeOpenAsar
+& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/nathwn12/vencord-bootstrap/main/vencord-setup.ps1'))) -IncludeOpenAsar
 ```
 
 To preview the plan without changing anything, add `-DryRun` to the second form.
@@ -63,7 +63,7 @@ Exit codes:
 - Upstream Vencord: https://github.com/Vendicated/Vencord
 - Upstream Installer: https://github.com/Vencord/Installer
 - Upstream releases, the engine this script downloads at run time: https://github.com/Vencord/Installer/releases
-- This repo: https://github.com/nathwn12/Installer2
+- This repo: https://github.com/nathwn12/vencord-bootstrap
 - License: GPLv3, see [LICENSE](LICENSE)
 
 <!-- nathwn12 house footer: identical in every repo. Do not edit. -->

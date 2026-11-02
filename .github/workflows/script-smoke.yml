@@ -1,4 +1,4 @@
-# Smoke test for the one-liner script (nathwn12/Installer2).
+# Smoke test for the one-liner script (nathwn12/vencord-bootstrap).
 #
 # Ported verbatim from the `script-smoke` job of the retired
 # `.github/workflows/sync-upstream.yml`: dry-runs vencord-setup.ps1 on
