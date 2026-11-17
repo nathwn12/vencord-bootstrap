@@ -1,8 +1,5 @@
-# vencord-bootstrap
-
-Install and repair Vencord from the official upstream release with one PowerShell line.
-
-Unofficial, personal-use driver. All credit to Vencord by Vendicated and contributors, and the Vencord Installer engine it downloads at run time.
+<h1 align="center">vencord-bootstrap</h1>
+<p align="center"><strong>Install and repair Vencord from the official upstream release with one PowerShell line.</strong></p>
 
 ## Install
 
@@ -10,40 +7,75 @@ Unofficial, personal-use driver. All credit to Vencord by Vendicated and contrib
 iex (irm 'https://raw.githubusercontent.com/nathwn12/vencord-bootstrap/main/vencord-setup.ps1')
 ```
 
-You need Windows with PowerShell 5.1 or newer and Discord already installed. You run once to detect your installs, download the official engine once, install or repair Vencord, then launch Discord.
-
-To include OpenAsar on each install:
+The one-liner finds every standard Discord install (stable, PTB, Canary, Development), downloads
+upstream's released `VencordInstallerCli.exe` into the temp folder, then installs or repairs Vencord
+on each install and launches it. Run it again whenever you want a repair. For OpenAsar, use the
+parameterised form:
 
 ```powershell
 & ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/nathwn12/vencord-bootstrap/main/vencord-setup.ps1'))) -IncludeOpenAsar
 ```
 
-Add `-DryRun` to the second form to preview the plan without changing anything.
+## Use it
 
-## What it does
+Start with a dry run. It prints the plan and the exact engine commands, and changes nothing:
 
-- Detect your Discord installs across stable, PTB, Canary, and Development.
-- Install Vencord on a fresh install or repair an already patched install.
-- Close Discord automatically before patching so a file lock never blocks the run.
-- Download the officially released executable at run time, so you always run the current engine.
-- Keep OpenAsar off unless you pass `-IncludeOpenAsar`; `-ExcludeOpenAsar` restates the default and cannot be combined with `-IncludeOpenAsar`.
-- Target one branch with `-Branch` (stable, ptb, canary, development, or dev as an alias for development) or one folder with `-Location`; the two cannot be combined; default is all detected installs.
-- Skip the automatic launch after success with `-NoLaunch`.
-- Re-run any time to repair or refresh; you verify each install on disk after the engine runs.
-- Read exit codes: `0` success including a dry run even when no installs are found, `1` install failure such as the engine or download failing, `2` usage or detection error such as conflicting flags, an unknown branch, or no Discord installs found.
-- Use network access to GitHub for the script and the engine download; you need no admin rights.
+```powershell
+& ([scriptblock]::Create((irm 'https://raw.githubusercontent.com/nathwn12/vencord-bootstrap/main/vencord-setup.ps1'))) -DryRun
+```
+
+Then run the first command. During a real run the script:
+
+- Closes Discord before patching, so a file lock cannot block the engine, and retries a transient failure twice.
+- Verifies each install on disk after the engine exits: the original asar is renamed and the stub is in place.
+- Launches every patched install through its own updater when the run succeeds.
+
+Exit codes: `0` success, including a dry run that finds no install; `1` install failure, such as the download or the engine failing; `2` usage or detection error, such as conflicting switches or an unknown branch.
+
+## Configure it
+
+Every switch is optional. The defaults install or repair all detected installs, keep OpenAsar off, and launch Discord afterwards.
+
+| Switch | Default | Effect |
+| --- | --- | --- |
+| `-DryRun` | off | Print the plan; download, execute and modify nothing. |
+| `-IncludeOpenAsar` | off | Also install OpenAsar on each detected install. |
+| `-ExcludeOpenAsar` | off | Restate the default; cannot be combined with `-IncludeOpenAsar`. |
+| `-Branch <name>` | all detected | One branch: `stable`, `ptb`, `canary`, `development` (alias `dev`). |
+| `-Location <path>` | all detected | One install base directory; cannot be combined with `-Branch`. |
+| `-NoLaunch` | launch | Do not start Discord after a successful run. |
+
+One branch, with OpenAsar, without launching:
+
+```powershell
+$script = irm 'https://raw.githubusercontent.com/nathwn12/vencord-bootstrap/main/vencord-setup.ps1'
+& ([scriptblock]::Create($script)) -Branch canary -IncludeOpenAsar -NoLaunch
+```
+
+## Requirements
+
+- Windows 10 or 11, with the Discord desktop app already installed on at least one branch.
+- Windows PowerShell 5.1 or newer; `pwsh` 7 works too.
+- Network access to `github.com` for the script and the engine download. No admin rights.
+
+## Development
+
+The repository is one script. Edit `vencord-setup.ps1`, keep it pure ASCII with no BOM, and prove it before committing:
+
+```powershell
+pwsh -NoProfile -File vencord-setup.ps1 -DryRun
+```
+
+That command exits `0` and prints either the plan or `Nothing to do.` when no Discord install exists. CI runs the same dry run on `windows-latest` for every push to `main` and every pull request, in `.github/workflows/script-smoke.yml`.
 
 ## Status
 
-Experimental and still moving. It works today, but it is not a finished
-product: interfaces may change, features may be improved or removed, and a
-release can break the one before it. This is maintained by one person, not a
-team. If it breaks, open an issue with the command you ran and what you saw.
+**Experimental** — pre-release; interfaces may change.
 
 ## Links
 
-- Upstream project `Vencord/Installer`: https://github.com/Vencord/Installer — this is a reduced fork of `Vencord/Installer`; the installer logic is upstream's work; you drive the upstream released engine with its own flags and patching is not reimplemented here.
-- Upstream author/project `Vendicated/Vencord`: https://github.com/Vendicated/Vencord
-- Upstream releases, the engine this script downloads at run time: https://github.com/Vencord/Installer/releases
-- This repo: https://github.com/nathwn12/vencord-bootstrap
-- License: GPL-3.0 — see [LICENSE](LICENSE).
+- [Issues](https://github.com/nathwn12/vencord-bootstrap/issues)
+- Upstream project: [Vencord Installer](https://github.com/Vencord/Installer) — the installer the Vencord project ships; this repo is a reduced fork that drives its released CLI, and patching is not reimplemented here.
+- Upstream product: [Vencord](https://github.com/Vendicated/Vencord) — the client mod this installs, by Vendicated and contributors.
+- Upstream releases: [VencordInstallerCli.exe](https://github.com/Vencord/Installer/releases) — the engine each run downloads.
+- [GPL-3.0](LICENSE)
