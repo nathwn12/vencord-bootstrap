@@ -1,0 +1,20 @@
+# Dependabot version updates.
+#
+# Actions only. The repository ships one PowerShell script and has no package
+# manifest, so `github-actions` is the only ecosystem here with anything to
+# update. There is no dependency file for Dependabot to read, and adding one
+# would be inventing a dependency that does not exist.
+#
+# On a fork this file alone does not start updates: Settings > Advanced
+# Security > "Dependabot version updates" must also be enabled once.
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:30"
+      timezone: "Asia/Manila"
+    open-pull-requests-limit: 5
