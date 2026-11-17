@@ -66,7 +66,7 @@ The repository is one script. Edit `vencord-setup.ps1`, keep it pure ASCII with 
 pwsh -NoProfile -File vencord-setup.ps1 -DryRun
 ```
 
-That command exits `0` and prints either the plan or `Nothing to do.` when no Discord install exists. CI runs the same dry run on `windows-latest` for every push to `main` and every pull request, in `.github/workflows/script-smoke.yml`.
+That command exits `0` and prints either the plan or `Nothing to do.` when no Discord install exists. CI runs the same dry run on `windows-latest` for every push to `main` and every pull request, in `.github/workflows/ci.yml`. A pull request that only touches Markdown, `docs/` or `LICEN[CS]E` reports the check green without running it.
 
 ## Status
 
