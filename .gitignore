@@ -1,0 +1,3 @@
+# never version the harness seed
+.seed/
+.opencode/skills/*-seed/
