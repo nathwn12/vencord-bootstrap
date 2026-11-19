@@ -62,7 +62,6 @@ function Invoke-VencordSetup {
     $cliUrl = 'https://github.com/Vencord/Installer/releases/latest/download/VencordInstallerCli.exe'
     $cliPath = Join-Path ([System.IO.Path]::GetTempPath()) 'VencordInstallerCli.exe'
 
-    # branch display name -> folder name under %LOCALAPPDATA% (mirrors find_discord_windows.go windowsNames)
     $branchFolders = @{
         stable      = 'Discord'
         ptb         = 'DiscordPTB'
@@ -79,9 +78,6 @@ function Invoke-VencordSetup {
         return ($parts -join ' ')
     }
 
-    # Mirrors ParseDiscord in find_discord_windows.go: among app-* dirs, pick the
-    # highest (same ordinal string ordering the Go code uses), require resources\app.asar,
-    # patched = resources\_app.asar exists.
     function Get-DiscordInstall([string]$BasePath, [string]$BranchName) {
         if (-not (Test-Path -LiteralPath $BasePath -PathType Container)) { return $null }
         $bestName = $null
@@ -105,8 +101,6 @@ function Invoke-VencordSetup {
     }
 
     function Invoke-Cli([string]$ExePath, [string[]]$ExeArgs) {
-        # 'Continue' here: native stderr merged via 2>&1 must not become a terminating
-        # error under the outer 'Stop' preference; lines are surfaced as text below.
         $prevEap = $ErrorActionPreference
         $ErrorActionPreference = 'Continue'
         $lines = New-Object System.Collections.Generic.List[string]
@@ -120,8 +114,6 @@ function Invoke-VencordSetup {
         return [pscustomobject]@{ ExitCode = $code; Output = $lines }
     }
 
-    # Verify the patch actually landed on disk: original asar renamed away (_app.asar)
-    # and a small stub app.asar in its place. Mirrors the state patchAppAsar leaves behind.
     function Test-PatchApplied($t) {
         $res = Join-Path $t.AppDir 'resources'
         if (-not (Test-Path -LiteralPath (Join-Path $res '_app.asar') -PathType Leaf)) { return $false }
@@ -130,9 +122,6 @@ function Invoke-VencordSetup {
         return ($stub.Length -lt 64KB)
     }
 
-    # Close running Discord: graceful (CloseMainWindow) first, force-kill leftovers.
-    # Polls every 250ms instead of fixed sleeps - exits as soon as Discord is gone,
-    # with hard ceilings (3s graceful / 2s after force) so the worst case is unchanged.
     function Close-DiscordProcesses {
         $procs = @(Get-Process -Name 'Discord*' -ErrorAction SilentlyContinue)
         if ($procs.Count -eq 0) { return }
@@ -157,10 +146,6 @@ function Invoke-VencordSetup {
         }
     }
 
-    # Resolve the Discord client executable FROM THE INSTALL (the app-* dir is the truth
-    # for which exe this install runs), never from a hardcoded branch table. The updater
-    # launcher is never a client; a known branch is the last-resort fallback so a missing
-    # or renamed exe still resolves; otherwise the caller is told, it is not guessed.
     function Get-DiscordExeName($t) {
         $candidates = @(Get-ChildItem -LiteralPath $t.AppDir -Filter '*.exe' -File -ErrorAction SilentlyContinue)
         foreach ($c in $candidates) {
@@ -171,10 +156,6 @@ function Invoke-VencordSetup {
         return $null
     }
 
-    # Launch one install we just patched: through the install's own updater when present
-    # (Update.exe --processStart <exe>, the canonical branch-agnostic shortcut target),
-    # directly from the app dir otherwise. A launch failure is a WARNING, never fatal -
-    # it must not change the run's exit code. Returns $true when a launch was issued.
     function Start-DiscordTarget($t) {
         $exeName = Get-DiscordExeName $t
         if (-not $exeName) {
@@ -222,7 +203,6 @@ function Invoke-VencordSetup {
             }
             if ($branchNorm -eq 'dev') { $branchNorm = 'development' }
         }
-        # -ExcludeOpenAsar just restates the default (OpenAsar off unless -IncludeOpenAsar).
         $wantOpenAsar = [bool]$IncludeOpenAsar
 
         Write-Host 'vencord-setup.ps1 - Vencord Installer driver'
@@ -290,7 +270,6 @@ function Invoke-VencordSetup {
                 Write-Host ("Discord running check: RUNNING ({0}) - the script will close it automatically before patching (graceful close, then force-kill)" -f $names)
             }
             else {
-                # Auto-close: graceful first, then force-kill leftovers.
                 Write-Host ("Closing Discord ({0}) to avoid file locks (errno 32)..." -f $names)
                 Close-DiscordProcesses
             }
@@ -395,8 +374,6 @@ function Invoke-VencordSetup {
                 Write-Host ("  Running: {0}" -f (Format-CliCommand $cliPath $cliActions[$t.Path]))
                 $r = Invoke-Cli -ExePath $cliPath -ExeArgs $cliActions[$t.Path]
                 if ($r.ExitCode -ne 0) {
-                    # Retry only transient failures: files locked by a running Discord.
-                    # Network/rate-limit failures are deterministic - retrying is noise.
                     $transient = (@($r.Output | Where-Object { $_ -match 'used by a different process|sharing violation' }).Count -gt 0)
                     if (-not $transient -or $a -ge $maxAttempts) {
                         Write-Host ("  FAILED: VencordInstallerCli.exe {0} exited with code {1}." -f $verb, $r.ExitCode)
@@ -405,7 +382,6 @@ function Invoke-VencordSetup {
                     }
                     continue
                 }
-                # Engine exited 0 - verify the patch actually landed on disk.
                 if (Test-PatchApplied $t) {
                     Write-Host '  Verified: patch is on disk.'
                     $okCount++
@@ -457,8 +433,6 @@ function Invoke-VencordSetup {
             exit 1
         }
         Write-Host 'Vencord is set up.'
-        # Every install verified on disk (we only get here when nothing failed), so launch
-        # once per target. A launch failure is reported above and never changes this exit code.
         if ($NoLaunch) {
             Write-Host 'Launch skipped (-NoLaunch). Restart Discord to load it.'
         }
@@ -481,8 +455,6 @@ function Invoke-VencordSetup {
     }
 }
 
-# Auto-run for the iex one-liner (no arguments) AND for scriptblock invocation with
-# arguments. Set VENCORD_SETUP_IMPORTED=1 to dot-import the function without running.
 if (-not $env:VENCORD_SETUP_IMPORTED) {
     Invoke-VencordSetup @PSBoundParameters
 }
