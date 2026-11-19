@@ -201,7 +201,6 @@ function Invoke-VencordSetup {
     }
 
     try {
-        # --- validate environment / parameters -----------------------------------
         if ($env:OS -ne 'Windows_NT') {
             Write-Host 'ERROR: This script supports Windows only.'
             exit 2
@@ -233,7 +232,6 @@ function Invoke-VencordSetup {
             Write-Host ''
         }
 
-        # --- detect installs ------------------------------------------------------
         $baseDir = $env:LOCALAPPDATA
         if (-not $baseDir) {
             Write-Host 'ERROR: %LOCALAPPDATA% is empty - cannot detect Discord installs.'
@@ -285,7 +283,6 @@ function Invoke-VencordSetup {
         }
         Write-Host ''
 
-        # --- Discord running check -------------------------------------------------
         $procs = @(Get-Process -Name 'Discord*' -ErrorAction SilentlyContinue)
         if ($procs.Count -gt 0) {
             $names = (@($procs | Select-Object -ExpandProperty ProcessName -Unique) -join ', ')
@@ -303,7 +300,6 @@ function Invoke-VencordSetup {
         }
         Write-Host ''
 
-        # --- per-install CLI arguments ---------------------------------------------
         # Engine quirk (cli.go isValidBranch): --branch accepts only stable|ptb|canary|auto.
         # 'development' is therefore targeted via --location instead of --branch.
         $cliActions = @{}
@@ -319,7 +315,6 @@ function Invoke-VencordSetup {
             $cliActions[$t.Path] = $action
         }
 
-        # --- dry run: print the exact plan and stop ---------------------------------
         if ($DryRun) {
             Write-Host 'Plan:'
             $i = 0
@@ -360,7 +355,6 @@ function Invoke-VencordSetup {
             return   # exit 0
         }
 
-        # --- download the CLI once ---------------------------------------------------
         Write-Host ("Downloading VencordInstallerCli.exe to {0} ..." -f $cliPath)
         $tls = [System.Net.ServicePointManager]::SecurityProtocol
         [System.Net.ServicePointManager]::SecurityProtocol = ($tls -bor [System.Net.SecurityProtocolType]::Tls12)
@@ -382,7 +376,6 @@ function Invoke-VencordSetup {
         Write-Host 'Download complete.'
         Write-Host ''
 
-        # --- execute per install -------------------------------------------------------
         $okCount = 0
         $failures = @()
         $i = 0
@@ -457,7 +450,6 @@ function Invoke-VencordSetup {
             Write-Host ''
         }
 
-        # --- summary ----------------------------------------------------------------------
         Write-Host ("Done: {0} install(s) processed successfully, {1} failed." -f $okCount, $failures.Count)
         if ($failures.Count -gt 0) {
             foreach ($f in $failures) { Write-Host ("  failed: {0}" -f $f) }
