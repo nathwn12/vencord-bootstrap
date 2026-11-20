@@ -1,6 +1,20 @@
 <h1 align="center">vencord-bootstrap</h1>
 <p align="center"><strong>Install and repair Vencord from the official upstream release with one PowerShell line.</strong></p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/platform-windows--64bit-2b3137?logo=windows&logoColor=white" alt="Platform" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-green" alt="GPL-3.0" /></a>
+</p>
+
+## Why vencord-bootstrap
+
+Installing Vencord normally means finding the right installer for each Discord branch and running it by hand. This script finds every standard install, drives the official released CLI and verifies the result, from one line you can paste into PowerShell.
+
+- **Every branch in one run.** Stable, PTB, Canary and Development are detected and patched together.
+- **Upstream engine.** It downloads Vencord's released `VencordInstallerCli.exe`; patching is not reimplemented here.
+- **Verified afterwards.** Each install is checked on disk and launched through its own updater on success.
+- **Dry run first.** `-DryRun` prints the exact plan and changes nothing.
+
 ## Install
 
 ```powershell
@@ -79,3 +93,5 @@ That command exits `0` and prints either the plan or `Nothing to do.` when no Di
 - Upstream product: [Vencord](https://github.com/Vendicated/Vencord) — the client mod this installs, by Vendicated and contributors.
 - Upstream releases: [VencordInstallerCli.exe](https://github.com/Vencord/Installer/releases) — the engine each run downloads.
 - [GPL-3.0](LICENSE)
+
+Built by nathwn12
