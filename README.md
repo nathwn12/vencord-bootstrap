@@ -89,9 +89,9 @@ That command exits `0` and prints either the plan or `Nothing to do.` when no Di
 ## Links
 
 - [Issues](https://github.com/nathwn12/vencord-bootstrap/issues)
-- Upstream project: [Vencord Installer](https://github.com/Vencord/Installer) — the installer the Vencord project ships; this repo is a reduced fork that drives its released CLI, and patching is not reimplemented here.
-- Upstream product: [Vencord](https://github.com/Vendicated/Vencord) — the client mod this installs, by Vendicated and contributors.
-- Upstream releases: [VencordInstallerCli.exe](https://github.com/Vencord/Installer/releases) — the engine each run downloads.
+- [Vencord Installer](https://github.com/Vencord/Installer)
+- [Vencord](https://github.com/Vendicated/Vencord)
+- [VencordInstallerCli.exe](https://github.com/Vencord/Installer/releases)
 - [GPL-3.0](LICENSE)
 
-Built by nathwn12
+<p align="center"><sub>Built by nathwn12</sub></p>
