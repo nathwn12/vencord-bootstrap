@@ -1,0 +1,13 @@
+---
+project: vencord-bootstrap
+one_line: Install and repair Vencord from the official upstream release with one PowerShell line.
+stack: [PowerShell]
+status: draft
+since: 2026-09
+capabilities: []
+limits: []
+updated: 2026-11-22
+draft: true
+---
+
+Installing Vencord normally means finding the right installer for each Discord branch and running it by hand. This script finds every standard install, drives the official released CLI and verifies the result, from one line you can paste into PowerShell.
