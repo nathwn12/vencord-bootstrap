@@ -10,7 +10,7 @@ Patching is NOT reimplemented here. All credit to Vencord upstream.
 - `vencord-setup.ps1` — the product. The only executable thing here.
 - `README.md` — user-facing install docs (owned by quill).
 - `LICENSE` — upstream's license, kept with the fork.
-- `.github/workflows/script-smoke.yml` — dry-run smoke test on push.
+- `.github/workflows/ci.yml` — dry-run smoke test on push and pull requests.
 
 ## Editing the script
 
