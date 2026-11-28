@@ -16,6 +16,8 @@ on:
 
 jobs:
   script-smoke:
+    permissions:
+      contents: read
     runs-on: windows-latest
 
     steps:
@@ -31,13 +33,17 @@ jobs:
       - name: Detect a docs-only change
         id: scope
         shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE: ${{ github.event.before }}
         run: |
           docs='^(.*\.md|docs/.*|LICEN[CS]E(\.md)?)$'
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            git fetch --no-tags origin "${{ github.base_ref }}"
-            changed=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
-          elif [ "${{ github.event_name }}" = "push" ] && [ -n "${{ github.event.before }}" ]; then
-            changed=$(git diff --name-only "${{ github.event.before }}" HEAD || true)
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            git fetch --no-tags origin "$BASE_REF"
+            changed=$(git diff --name-only "origin/$BASE_REF...HEAD")
+          elif [ "$EVENT_NAME" = "push" ] && [ -n "$BEFORE" ]; then
+            changed=$(git diff --name-only "$BEFORE" HEAD || true)
           else
             changed=$(git ls-files)
           fi
