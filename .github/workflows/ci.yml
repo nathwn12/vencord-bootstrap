@@ -26,6 +26,7 @@ jobs:
           # checking out a branch name makes HEAD the base, so every docs-only
           # pull request resolved `code=true` and ran the smoke test.
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Detect a docs-only change
         id: scope
